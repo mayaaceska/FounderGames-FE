@@ -1,6 +1,6 @@
 import Navbar from "../../components/Navbar/Navbar";
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
   return (
     <div>
       <Navbar />

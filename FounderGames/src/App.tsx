@@ -6,8 +6,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/multivideo" element={} />
-        <Route path="/singlevideo" element={} />
+        {/* <Route path="/multivideo" element={} />
+        <Route path="/singlevideo" element={} /> */}
        </Routes>
     </Router>
   );
