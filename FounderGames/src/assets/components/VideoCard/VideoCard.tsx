@@ -1,21 +1,21 @@
+// src/components/VideoCard/VideoCard.tsx
 import React from 'react';
 
 interface VideoCardProps {
   videoId: string;
   title: string;
   thumbnailUrl: string;
+  summary?: string;
   onClick: () => void;
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ videoId, title, thumbnailUrl, onClick }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ videoId, title, thumbnailUrl, summary, onClick }) => {
   return (
-    <div
-      onClick={onClick}
-      className="cursor-pointer bg-white shadow-md rounded-lg overflow-hidden w-full hover:shadow-lg transition-shadow duration-200"
-    >
-      <img src={thumbnailUrl} alt={title} className="w-full h-36 object-cover" />
+    <div onClick={onClick} className="cursor-pointer border rounded-lg overflow-hidden shadow-lg">
+      <img src={thumbnailUrl} alt={title} className="w-full h-48 object-cover" />
       <div className="p-4">
-        <h3 className="text-lg font-semibold">{title}</h3>
+        <h2 className="text-lg font-bold mb-2">{title}</h2>
+        {summary && <p className="text-sm text-gray-600">{summary}</p>}
       </div>
     </div>
   );

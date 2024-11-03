@@ -8,6 +8,7 @@ interface Video {
   id: number;
   title: string;
   url: string;
+  summary: string;
 }
 
 const MultiVideoPage: React.FC = () => {
@@ -17,21 +18,48 @@ const MultiVideoPage: React.FC = () => {
   const [videos, setVideos] = useState<Video[]>([]);
 
   useEffect(() => {
-    const fetchVideos = async () => {
+    const fetchVideoById = async () => {
       try {
-        const response = await fetch(`/api/search-videos?query=${encodeURIComponent(query)}`);
+        const response = await fetch(`https://7edd-92-53-25-116.ngrok-free.app/api/transcriptions/${encodeURIComponent(query)}`, {
+            method: "GET",
+            headers: new Headers({
+              "ngrok-skip-browser-warning": "69420",
+            }),
+          });
+
         if (response.ok) {
           const data = await response.json();
-          setVideos(data); // Assuming `data` is an array of video objects
+
+          // Log the fetched data to check its structure
+          console.log('Fetched data:', data);
+
+          // Access the transcription object
+          const transcription = data.transcription;
+
+          // Check if transcription has the expected properties
+          if (transcription && transcription.id && transcription.title && transcription.video_url) {
+            const video: Video = {
+              id: transcription.id,
+              title: transcription.title,
+              url: transcription.video_url,
+              summary: transcription.summary, // You can adjust this based on what summary you want
+            };
+            setVideos([video]); // Set videos to an array with a single video object
+          } else {
+            console.error('Invalid video data structure:', transcription);
+            setVideos([]); // Clear videos if structure is not as expected
+          }
         } else {
-          console.error('Failed to fetch videos');
+          console.error('Failed to fetch video');
+          setVideos([]); // Clear videos if not found
         }
       } catch (error) {
-        console.error('Error fetching videos:', error);
+        console.error('Error fetching video:', error);
+        setVideos([]); // Clear videos in case of error
       }
     };
 
-    if (query) fetchVideos();
+    if (query) fetchVideoById(); // Only fetch if there is a query (ID)
   }, [query]);
 
   const handleCardClick = (videoId: number) => {
@@ -43,7 +71,7 @@ const MultiVideoPage: React.FC = () => {
       <Navbar />
       <div className="p-6 pt-32">
         <h1 className="text-2xl font-bold mb-4">
-          {videos.length} related results for: "{query}"
+          {videos.length > 0 ? `1 result for ID: "${query}"` : `No results found for ID: "${query}"`}
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {videos.length > 0 ? (
@@ -52,7 +80,8 @@ const MultiVideoPage: React.FC = () => {
                 key={video.id}
                 videoId={video.id.toString()}
                 title={video.title}
-                thumbnailUrl="https://via.placeholder.com/150"
+                thumbnailUrl="https://via.placeholder.com/150" // Replace with actual thumbnail if available
+                summary={video.summary} // Display the summary if needed in the VideoCard
                 onClick={() => handleCardClick(video.id)}
               />
             ))
