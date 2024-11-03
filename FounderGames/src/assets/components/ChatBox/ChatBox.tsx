@@ -1,38 +1,66 @@
+// src/components/ChatBox/ChatBox.tsx
 import React, { useState } from 'react';
 
-const ChatBox: React.FC = () => {
-  const [query, setQuery] = useState<string>('');
+interface ChatBoxProps {
+  videoId: string;
+}
 
-  const handleSend = () => {
+const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
+  const [query, setQuery] = useState<string>('');
+  const [response, setResponse] = useState<string>('');
+
+  const handleSend = async () => {
     if (query.trim()) {
-      // Here you would handle sending the query, e.g., API call or state update
-      console.log('Sending query:', query);
+      try {
+        const res = await fetch(`/api/ask-question`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ videoId, query }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setResponse(data.answer); // Assuming the backend returns an "answer" field
+        } else {
+          setResponse("Error: Unable to fetch answer.");
+        }
+      } catch (error) {
+        console.error("Error fetching response:", error);
+        setResponse("Error: Unable to fetch answer.");
+      }
       setQuery(''); // Clear the input after sending
     }
   };
 
   return (
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 w-full max-w-md p-4">
-      <div className="bg-white shadow-lg rounded-lg flex items-center">
+      <div className="bg-white shadow-lg rounded-lg flex items-center mb-4">
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Type your message here..."
+          placeholder="Type your question here..."
           className="flex-grow border border-gray-300 rounded-l-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          style={{ width: '90%' }} // Set width of input to 90%
         />
         <button
           onClick={handleSend}
           className="bg-blue-600 text-white rounded-r-md px-4 py-2 hover:bg-blue-700 transition"
-          style={{ flexShrink: 0 }} // Prevent button from shrinking
+          style={{ flexShrink: 0 }}
         >
           Ask
         </button>
       </div>
+      {response && (
+        <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+          <p className="text-sm font-semibold text-gray-700">Response:</p>
+          <p className="text-gray-800">{response}</p>
+        </div>
+      )}
     </div>
   );
 };
 
 export default ChatBox;
+
 

@@ -1,50 +1,66 @@
-// import Navbar from "../../components/Navbar/Navbar";
+// src/assets/pages/MultiVideoPage/MultiVideoPage.tsx
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Navbar from '../../components/Navbar/Navbar';
+import VideoCard from '../../components/VideoCard/VideoCard';
 
-// const MultiVideoPage = () => {
-//   return (
-//     <div>
-//       <Navbar />
-//     </div>
-//   );
-// };
-
-// export default MultiVideoPage;
-
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+interface Video {
+  id: number;
+  title: string;
+  url: string;
+}
 
 const MultiVideoPage: React.FC = () => {
   const location = useLocation();
-  const { query } = location.state || { query: '' }; // Get the search query from the state
+  const navigate = useNavigate();
+  const { query } = location.state || { query: '' };
+  const [videos, setVideos] = useState<Video[]>([]);
 
-  // Dummy data to represent search results
-  const dummyData = [
-    { id: 1, title: 'Video 1: Introduction to React', url: 'https://www.youtube.com/watch?v=1' },
-    { id: 2, title: 'Video 2: React Hooks Explained', url: 'https://www.youtube.com/watch?v=2' },
-    { id: 3, title: 'Video 3: Building a React App', url: 'https://www.youtube.com/watch?v=3' },
-  ];
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const response = await fetch(`/api/search-videos?query=${encodeURIComponent(query)}`);
+        if (response.ok) {
+          const data = await response.json();
+          setVideos(data); // Assuming `data` is an array of video objects
+        } else {
+          console.error('Failed to fetch videos');
+        }
+      } catch (error) {
+        console.error('Error fetching videos:', error);
+      }
+    };
 
-  // Filter dummy data based on the query (case-insensitive)
-  const filteredVideos = dummyData.filter(video =>
-    video.title.toLowerCase().includes(query.toLowerCase())
-  );
+    if (query) fetchVideos();
+  }, [query]);
+
+  const handleCardClick = (videoId: number) => {
+    navigate(`/single-video/${videoId}`);
+  };
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Search Results for: {query}</h1>
-      <ul className="space-y-2">
-        {filteredVideos.length > 0 ? (
-          filteredVideos.map(video => (
-            <li key={video.id} className="border-b py-2">
-              <a href={video.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                {video.title}
-              </a>
-            </li>
-          ))
-        ) : (
-          <p>No results found.</p>
-        )}
-      </ul>
+    <div>
+      <Navbar />
+      <div className="p-6 pt-32">
+        <h1 className="text-2xl font-bold mb-4">
+          {videos.length} related results for: "{query}"
+        </h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {videos.length > 0 ? (
+            videos.map(video => (
+              <VideoCard
+                key={video.id}
+                videoId={video.id.toString()}
+                title={video.title}
+                thumbnailUrl="https://via.placeholder.com/150"
+                onClick={() => handleCardClick(video.id)}
+              />
+            ))
+          ) : (
+            <p>No results found.</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
