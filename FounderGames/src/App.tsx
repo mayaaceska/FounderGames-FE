@@ -1,4 +1,3 @@
-// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './assets/pages/HomePage/HomePage';
 import MultiVideoPage from './assets/pages/MultiVideoPage/MultiVideoPage';

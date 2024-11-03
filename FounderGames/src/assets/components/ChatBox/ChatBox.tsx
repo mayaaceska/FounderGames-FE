@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ChatBoxProps {
-  videoId: string | undefined; // Optional or provide default value
+  videoId: string | undefined; 
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
@@ -9,7 +9,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
   const [response, setResponse] = useState<string>('');
 
   const handleSend = async () => {
-    if (query.trim() && videoId) { // Ensure videoId is defined
+    if (query.trim() && videoId) { 
       try {
         const res = await fetch(`/api/ask-question`, {
           method: 'POST',
@@ -20,7 +20,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
         });
         if (res.ok) {
           const data = await res.json();
-          setResponse(data.answer); // Assuming the backend returns an "answer" field
+          setResponse(data.answer); 
         } else {
           setResponse("Error: Unable to fetch answer.");
         }
@@ -28,7 +28,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
         console.error("Error fetching response:", error);
         setResponse("Error: Unable to fetch answer.");
       }
-      setQuery(''); // Clear the input after sending
+      setQuery(''); 
     }
   };
 

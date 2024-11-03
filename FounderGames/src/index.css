@@ -4,5 +4,5 @@
 
 body {
   overflow-x: hidden;
-  @apply bg-gray-50; /* Add a light gray background */
+  @apply bg-gray-50;
 }

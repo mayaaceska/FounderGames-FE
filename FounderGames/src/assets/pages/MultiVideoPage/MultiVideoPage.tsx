@@ -1,4 +1,3 @@
-// src/assets/pages/MultiVideoPage/MultiVideoPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
@@ -20,7 +19,7 @@ const MultiVideoPage: React.FC = () => {
   useEffect(() => {
     const fetchVideoById = async () => {
       try {
-        const response = await fetch(`https://7edd-92-53-25-116.ngrok-free.app/api/transcriptions/${encodeURIComponent(query)}`, {
+        const response = await fetch(`https://ae6d-92-53-25-116.ngrok-free.app/api/transcriptions/${encodeURIComponent(query)}`, {
             method: "GET",
             headers: new Headers({
               "ngrok-skip-browser-warning": "69420",
@@ -30,36 +29,33 @@ const MultiVideoPage: React.FC = () => {
         if (response.ok) {
           const data = await response.json();
 
-          // Log the fetched data to check its structure
           console.log('Fetched data:', data);
 
-          // Access the transcription object
           const transcription = data.transcription;
 
-          // Check if transcription has the expected properties
           if (transcription && transcription.id && transcription.title && transcription.video_url) {
             const video: Video = {
               id: transcription.id,
               title: transcription.title,
               url: transcription.video_url,
-              summary: transcription.summary, // You can adjust this based on what summary you want
+              summary: transcription.summary,
             };
-            setVideos([video]); // Set videos to an array with a single video object
+            setVideos([video]);
           } else {
             console.error('Invalid video data structure:', transcription);
-            setVideos([]); // Clear videos if structure is not as expected
+            setVideos([]);
           }
         } else {
           console.error('Failed to fetch video');
-          setVideos([]); // Clear videos if not found
+          setVideos([]);
         }
       } catch (error) {
         console.error('Error fetching video:', error);
-        setVideos([]); // Clear videos in case of error
+        setVideos([]);
       }
     };
 
-    if (query) fetchVideoById(); // Only fetch if there is a query (ID)
+    if (query) fetchVideoById();
   }, [query]);
 
   const handleCardClick = (videoId: number) => {
@@ -80,8 +76,8 @@ const MultiVideoPage: React.FC = () => {
                 key={video.id}
                 videoId={video.id.toString()}
                 title={video.title}
-                thumbnailUrl="https://via.placeholder.com/150" // Replace with actual thumbnail if available
-                summary={video.summary} // Display the summary if needed in the VideoCard
+                thumbnailUrl="https://via.placeholder.com/150" 
+                summary={video.summary} 
                 onClick={() => handleCardClick(video.id)}
               />
             ))

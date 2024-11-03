@@ -9,7 +9,7 @@ const YouTubeLinkForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Regular expression to validate YouTube links
+    
     const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 
     if (!youtubeRegex.test(link)) {
@@ -18,16 +18,15 @@ const YouTubeLinkForm: React.FC = () => {
     }
 
     try {
-      setError(''); // Clear any previous error messages
+      setError(''); 
 
-      // Send the link to the backend to transcribe and get a unique video ID
-      const response = await fetch('https://7edd-92-53-25-116.ngrok-free.app/api/transcribe', {
+      const response = await fetch(`https://ae6d-92-53-25-116.ngrok-free.app/api/transcribe`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json',
-          "ngrok-skip-browser-warning": "69420",
+          'ngrok-skip-browser-warning': 'true',  
         },
-        body: JSON.stringify({ link }), // Send the link in the request body
+        body: JSON.stringify({ video_url:link }),  
       });
 
       if (!response.ok) {
@@ -36,9 +35,8 @@ const YouTubeLinkForm: React.FC = () => {
       }
 
       const data = await response.json();
-      const videoId = data.videoId; // Assuming the backend returns { videoId: 'unique-id' }
+      const videoId = data.transcription_id;
 
-      // Navigate to the single video page with the video ID
       navigate(`/single-video/${videoId}`);
     } catch (error) {
       console.error(error);

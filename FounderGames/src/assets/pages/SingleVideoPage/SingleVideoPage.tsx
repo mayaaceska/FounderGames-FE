@@ -20,7 +20,7 @@ const SingleVideoPage: React.FC = () => {
   useEffect(() => {
     const fetchVideoData = async () => {
       try {
-        const response = await fetch(`https://7edd-92-53-25-116.ngrok-free.app/api/transcriptions/${videoId}`, {
+        const response = await fetch(`https://ae6d-92-53-25-116.ngrok-free.app/api/transcriptions/${videoId}`, {
           method: "GET",
           headers: {
             "ngrok-skip-browser-warning": "69420",
@@ -36,7 +36,7 @@ const SingleVideoPage: React.FC = () => {
               id: transcription.id,
               title: transcription.title,
               video_url: transcription.video_url,
-              summary: transcription.summary, // Assuming this holds the summary
+              summary: transcription.summary,
             };
             setVideoData(video);
           } else {
