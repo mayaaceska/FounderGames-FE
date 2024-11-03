@@ -31,7 +31,7 @@ const Transcribe: React.FC = () => {
               };
             }
             return null; // Ignore lines that don't match
-          }).filter((item): item is { time: string; text: string } => item !== null); // Filter out null values and ensure type safety
+          }).filter((item:any): item is { time: string; text: string } => item !== null); // Filter out null values and ensure type safety
 
           setTranscription(keypointsArray);
         }

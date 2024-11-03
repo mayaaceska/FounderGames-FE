@@ -1,6 +1,3 @@
-// src/components/VideoCard/VideoCard.tsx
-import React from 'react';
-
 interface VideoCardProps {
   videoId: string;
   title: string;

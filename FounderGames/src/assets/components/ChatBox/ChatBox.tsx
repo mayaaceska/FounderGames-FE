@@ -1,8 +1,7 @@
-// src/components/ChatBox/ChatBox.tsx
 import React, { useState } from 'react';
 
 interface ChatBoxProps {
-  videoId: string;
+  videoId: string | undefined; // Optional or provide default value
 }
 
 const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
@@ -10,7 +9,7 @@ const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
   const [response, setResponse] = useState<string>('');
 
   const handleSend = async () => {
-    if (query.trim()) {
+    if (query.trim() && videoId) { // Ensure videoId is defined
       try {
         const res = await fetch(`/api/ask-question`, {
           method: 'POST',
@@ -62,5 +61,3 @@ const ChatBox: React.FC<ChatBoxProps> = ({ videoId }) => {
 };
 
 export default ChatBox;
-
-

@@ -1,4 +1,3 @@
-// src/assets/pages/SingleVideoPage/SingleVideoPage.tsx
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../components/Navbar/Navbar';
@@ -22,12 +21,12 @@ const SingleVideoPage: React.FC = () => {
     const fetchVideoData = async () => {
       try {
         const response = await fetch(`https://7edd-92-53-25-116.ngrok-free.app/api/transcriptions/${videoId}`, {
-            method: "GET",
-            headers: new Headers({
-              "ngrok-skip-browser-warning": "69420",
-            }),
-          });
-          
+          method: "GET",
+          headers: {
+            "ngrok-skip-browser-warning": "69420",
+          },
+        });
+        
         if (response.ok) {
           const data = await response.json();
           const transcription = data.transcription;

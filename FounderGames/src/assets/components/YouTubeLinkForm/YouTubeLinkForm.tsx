@@ -13,24 +13,26 @@ const YouTubeLinkForm: React.FC = () => {
     const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/;
 
     if (!youtubeRegex.test(link)) {
-      setError("The link is not in our database. Please post a YouTube link.");
+      setError("Please enter a valid YouTube link.");
       return;
     }
 
     try {
       setError(''); // Clear any previous error messages
 
-      // Send the link to the backend to get or create a unique video ID
-      const response = await fetch('/api/videos', {
-        method: 'POST',
+      // Send the link to the backend to transcribe and get a unique video ID
+      const response = await fetch('https://7edd-92-53-25-116.ngrok-free.app/api/transcribe', {
+        method: "POST",
         headers: {
           'Content-Type': 'application/json',
+          "ngrok-skip-browser-warning": "69420",
         },
-        body: JSON.stringify({ link }),
+        body: JSON.stringify({ link }), // Send the link in the request body
       });
 
       if (!response.ok) {
-        throw new Error('Failed to retrieve video ID from the server');
+        const errorText = await response.text();
+        throw new Error(`Error ${response.status}: ${errorText}`);
       }
 
       const data = await response.json();
@@ -74,5 +76,3 @@ const YouTubeLinkForm: React.FC = () => {
 };
 
 export default YouTubeLinkForm;
-
-
